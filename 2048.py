@@ -49,54 +49,101 @@ class Board:
 
     # moves all tiles to upmost position
     def move_up(self):
+        l1 = []
+        l2 = []
+        l3 = []
+        l4 = []
         for x in range(4):
-            moved_numbers = []
-            for y in range(4):
-                if self.grid[x + y * 4] != 0:
-                    moved_numbers.append(self.grid[x + y * 4])
-            self.move(moved_numbers)
-            for y in range(4):
-                self.grid[x + y * 4] = moved_numbers[y]
-        self.generate()
+            l1.append(self.grid[4 * x])
+            l2.append(self.grid[1 + 4 * x])
+            l3.append(self.grid[2 + 4 * x])
+            l4.append(self.grid[3 + 4 * x])
+
+        if self.check(l1, -1) or self.check(l2, -1) or self.check(l3, -1) or self.check(l4, -1):
+            self.move(l1)
+            self.move(l2)
+            self.move(l3)
+            self.move(l4)
+            for x in range(4):
+                self.grid[4 * x] = l1[x]
+                self.grid[1 + 4 * x] = l2[x]
+                self.grid[2 + 4 * x] = l3[x]
+                self.grid[3 + 4 * x] = l4[x]
+            self.generate()
 
     # moves all tiles to downmost position
     def move_down(self):
+        l1 = []
+        l2 = []
+        l3 = []
+        l4 = []
         for x in range(4):
-            moved_numbers = []
-            for y in range(4):
-                if self.grid[12 + x - y * 4] != 0:
-                    moved_numbers.append(self.grid[12 + x - y * 4])
-            self.move(moved_numbers)
-            for y in range(4):
-                self.grid[12 + x - y * 4] = moved_numbers[y]
-        self.generate()
+            l1.append(self.grid[12 - 4 * x])
+            l2.append(self.grid[13 - 4 * x])
+            l3.append(self.grid[14 - 4 * x])
+            l4.append(self.grid[15 - 4 * x])
+        if self.check(l1, -1) or self.check(l2, -1) or self.check(l3, -1) or self.check(l4, -1):
+            self.move(l1)
+            self.move(l2)
+            self.move(l3)
+            self.move(l4)
+            for x in range(4):
+                self.grid[12 - 4 * x] = l1[x]
+                self.grid[13 - 4 * x] = l2[x]
+                self.grid[14 - 4 * x] = l3[x]
+                self.grid[15 - 4 * x] = l4[x]
+            self.generate()
 
     # moves all tiles to leftmost position
     def move_left(self):
+        l1 = []
+        l2 = []
+        l3 = []
+        l4 = []
         for x in range(4):
-            moved_numbers = []
-            for y in range(4):
-                if self.grid[4 * x + y] != 0:
-                    moved_numbers.append(self.grid[4 * x + y])
-            self.move(moved_numbers)
-            for y in range(4):
-                self.grid[4 * x + y] = moved_numbers[y]
-        self.generate()
+            l1.append(self.grid[x])
+            l2.append(self.grid[4 + x])
+            l3.append(self.grid[8 + x])
+            l4.append(self.grid[12 + x])
+        if self.check(l1, -1) or self.check(l2, -1) or self.check(l3, -1) or self.check(l4, -1):
+            self.move(l1)
+            self.move(l2)
+            self.move(l3)
+            self.move(l4)
+            for x in range(4):
+                self.grid[x] = l1[x]
+                self.grid[4 + x] = l2[x]
+                self.grid[8 + x] = l3[x]
+                self.grid[12 + x] = l4[x]
+            self.generate()
 
     # moves all tiles to rightmost position
     def move_right(self):
+        l1 = []
+        l2 = []
+        l3 = []
+        l4 = []
         for x in range(4):
-            moved_numbers = []
-            for y in range(4):
-                if self.grid[4 * x + 3 - y] != 0:
-                    moved_numbers.append(self.grid[4 * x + 3 - y])
-            self.move(moved_numbers)
-            for y in range(4):
-                self.grid[4 * x + 3 - y] = moved_numbers[y]
-        self.generate()
+            l1.append(self.grid[3 - x])
+            l2.append(self.grid[7 - x])
+            l3.append(self.grid[11 - x])
+            l4.append(self.grid[15 - x])
+        if self.check(l1, -1) or self.check(l2, -1) or self.check(l3, -1) or self.check(l4, -1):
+            self.move(l1)
+            self.move(l2)
+            self.move(l3)
+            self.move(l4)
+            for x in range(4):
+                self.grid[3 - x] = l1[x]
+                self.grid[7 - x] = l2[x]
+                self.grid[11 - x] = l3[x]
+                self.grid[15 - x] = l4[x]
+            self.generate()
 
     # helper function that combines adjacent numbers and adjusts size of list
     def move(self, moved_numbers):
+        while moved_numbers.count(0) != 0:
+            moved_numbers.remove(0)
         if len(moved_numbers) == 0:
             for y in range(4):
                 moved_numbers.append(0)
@@ -113,7 +160,17 @@ class Board:
         for y in range(4 - len(moved_numbers)):
             moved_numbers.append(0)
 
+    def check(self, lst, prev):
+        if len(lst) == 0:
+            return False
+        elif lst[0] == 0:
+            return lst.count(0) != len(lst)
+        elif lst[0] == prev:
+            return True
+        else:
+            return self.check(lst[1:], lst[0])
 
+# Prints out menu options
 def menu():
     print("What would you like to do?")
     print("1. Move Up")
